@@ -36,12 +36,11 @@ defmodule Exercise do
     Enum.zip(x_interval, y_interval)
   end
 
-  # Line is diagonal - not to be consider FOR NOW
-  def draw_hydrothermal_line(_x1, _x2, _y1, _y2) do
-    # x_interval = Enum.to_list(x1..x2)
-    # y_interval = Enum.to_list(y1..y2)
-    # Enum.zip(x_interval, y_interval)
-    []
+  # Line is diagonal
+  def draw_hydrothermal_line(x1, x2, y1, y2) do
+    x_interval = Enum.to_list(x1..x2)
+    y_interval = Enum.to_list(y1..y2)
+    Enum.zip(x_interval, y_interval)
   end
 end
 
