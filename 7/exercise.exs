@@ -5,24 +5,41 @@ defmodule Exercise do
     |> Enum.map(&String.to_integer(&1))
   end
 
-  def fuel_spend(crabs, checked_paths \\ [], fuel_spent \\ [])
-
-  def fuel_spend([], _, fuel_spent) do
-    fuel_spent
-    |> Enum.sort()
-    |> List.first()
+  def possible_paths(crabs) do
+    lower_crab = Enum.min(crabs)
+    higher_crab = Enum.max(crabs)
+    Enum.to_list(lower_crab..higher_crab)
   end
 
-  def fuel_spend([crab | crabs], checked_paths, fuel_spent) do
+  def fuel_spend(paths, crabs, fuel_spent \\ [])
+
+  def fuel_spend([], _, fuel_spent),
+    do:
+      fuel_spent
+      |> Enum.sort()
+      |> List.first()
+
+  def fuel_spend([path | paths], crabs, fuel_spent) do
     fuel =
-      (crabs ++ checked_paths)
-      |> Enum.map(&abs(&1 - crab))
+      crabs
+      |> Enum.map(fn crab ->
+        case crab == path do
+          true ->
+            0
+
+          false ->
+            1..abs(crab - path)
+            |> Enum.sum()
+        end
+      end)
       |> Enum.sum()
 
-    fuel_spend(crabs, checked_paths ++ [crab], fuel_spent ++ [fuel])
+    fuel_spend(paths, crabs, fuel_spent ++ [fuel])
   end
 end
 
-Exercise.parse_input()
-|> Exercise.fuel_spend()
+crabs = Exercise.parse_input()
+paths = Exercise.possible_paths(crabs)
+
+Exercise.fuel_spend(paths, crabs)
 |> IO.inspect()
