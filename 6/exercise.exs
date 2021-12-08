@@ -3,21 +3,23 @@ defmodule Exercise do
     File.read!("input.txt")
     |> String.split(",")
     |> Enum.map(&String.to_integer(&1))
+    |> Enum.group_by(& &1)
+    |> Enum.reduce(List.duplicate(0, 9), fn {age, fishes_with_age}, acc ->
+      acc
+      |> List.delete_at(age)
+      |> List.insert_at(age, length(fishes_with_age))
+    end)
   end
 
-  def count_lanternfishes(fishes, day \\ 0)
-  def count_lanternfishes(fishes, 80), do: length(fishes)
+  def linear_lanternfish_count(fishes, day \\ 0)
 
-  def count_lanternfishes(fishes, day) do
-    count_new_fishes = Enum.filter(fishes, &(&1 == 0)) |> length()
+  def linear_lanternfish_count(fishes, 256), do: Enum.sum(fishes)
 
-    fishes
-    |> Enum.map(&if &1 == 0, do: 6, else: &1 - 1)
-    |> List.flatten(List.duplicate(8, count_new_fishes))
-    |> count_lanternfishes(day + 1)
+  def linear_lanternfish_count([n0, n1, n2, n3, n4, n5, n6, n7, n8], day) do
+    linear_lanternfish_count([n1, n2, n3, n4, n5, n6, n7 + n0, n8, n0], day + 1)
   end
 end
 
 Exercise.parse_input()
-|> Exercise.count_lanternfishes()
+|> Exercise.linear_lanternfish_count()
 |> IO.inspect()
